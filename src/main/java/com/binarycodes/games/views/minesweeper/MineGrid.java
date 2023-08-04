@@ -20,12 +20,13 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Width;
 
 public class MineGrid extends VerticalLayout {
 
+    private static final SecureRandom RANDOM = new SecureRandom();
+
     private static final int ROWS = 10;
     private static final int COLUMNS = 10;
-    private static final int MAX_MINES = 17;
+    private static final int MAX_MINES = RANDOM.nextInt(15, 25);
 
     private static final MineCell[][] GRID = new MineCell[ROWS][COLUMNS];
-    private static final SecureRandom RANDOM = new SecureRandom();
 
     private int mineCounter;
     private int flagCounter;
