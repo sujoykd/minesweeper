@@ -1,7 +1,8 @@
 package com.binarycodes.games.views;
 
-import com.binarycodes.games.views.about.AboutView;
-import com.binarycodes.games.views.helloworld.HelloWorldView;
+import org.vaadin.lineawesome.LineAwesomeIcon;
+
+import com.binarycodes.games.views.minesweeper.MineSweeperView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.Footer;
@@ -13,7 +14,6 @@ import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import org.vaadin.lineawesome.LineAwesomeIcon;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -23,54 +23,51 @@ public class MainLayout extends AppLayout {
     private H2 viewTitle;
 
     public MainLayout() {
-        setPrimarySection(Section.DRAWER);
-        addDrawerContent();
-        addHeaderContent();
+        this.setPrimarySection(Section.DRAWER);
+        this.addDrawerContent();
+        this.addHeaderContent();
     }
 
     private void addHeaderContent() {
-        DrawerToggle toggle = new DrawerToggle();
+        final DrawerToggle toggle = new DrawerToggle();
         toggle.setAriaLabel("Menu toggle");
 
-        viewTitle = new H2();
-        viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
+        this.viewTitle = new H2();
+        this.viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
 
-        addToNavbar(true, toggle, viewTitle);
+        this.addToNavbar(true, toggle, this.viewTitle);
     }
 
     private void addDrawerContent() {
-        H1 appName = new H1("Minesweeper");
+        final H1 appName = new H1("Minesweeper");
         appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
-        Header header = new Header(appName);
+        final Header header = new Header(appName);
 
-        Scroller scroller = new Scroller(createNavigation());
+        final Scroller scroller = new Scroller(this.createNavigation());
 
-        addToDrawer(header, scroller, createFooter());
+        this.addToDrawer(header, scroller, this.createFooter());
     }
 
     private SideNav createNavigation() {
-        SideNav nav = new SideNav();
+        final SideNav nav = new SideNav();
 
-        nav.addItem(new SideNavItem("Hello World", HelloWorldView.class, LineAwesomeIcon.GLOBE_SOLID.create()));
-        nav.addItem(new SideNavItem("About", AboutView.class, LineAwesomeIcon.FILE.create()));
+        nav.addItem(new SideNavItem("MineSweeper", MineSweeperView.class, LineAwesomeIcon.BOMB_SOLID.create()));
 
         return nav;
     }
 
     private Footer createFooter() {
-        Footer layout = new Footer();
-
-        return layout;
+        return new Footer();
     }
 
     @Override
     protected void afterNavigation() {
         super.afterNavigation();
-        viewTitle.setText(getCurrentPageTitle());
+        this.viewTitle.setText(this.getCurrentPageTitle());
     }
 
     private String getCurrentPageTitle() {
-        PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
+        final PageTitle title = this.getContent().getClass().getAnnotation(PageTitle.class);
         return title == null ? "" : title.value();
     }
 }
