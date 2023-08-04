@@ -1,5 +1,9 @@
 package com.binarycodes.games.views;
 
+import java.util.Comparator;
+import java.util.Map.Entry;
+
+import com.binarycodes.games.util.Game;
 import com.binarycodes.games.util.GenericUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -49,7 +53,9 @@ public class MainLayout extends AppLayout {
     private SideNav createNavigation() {
         final SideNav nav = new SideNav();
 
-        GenericUtil.findAllGames().forEach((clazz, game) -> {
+        GenericUtil.findAllGames().entrySet().stream().sorted(Entry.comparingByValue(Comparator.comparing(Game::title))).forEach(entry -> {
+            final var clazz = entry.getKey();
+            final var game = entry.getValue();
             nav.addItem(new SideNavItem(game.title(), clazz, game.icon().create()));
         });
 
