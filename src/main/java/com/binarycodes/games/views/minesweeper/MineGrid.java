@@ -1,24 +1,20 @@
 package com.binarycodes.games.views.minesweeper;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Objects;
 
+import com.binarycodes.games.util.CommonGrid;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
-import com.vaadin.flow.theme.lumo.LumoUtility.Border;
 import com.vaadin.flow.theme.lumo.LumoUtility.Display;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import com.vaadin.flow.theme.lumo.LumoUtility.JustifyContent;
-import com.vaadin.flow.theme.lumo.LumoUtility.Width;
 
-public class MineGrid extends VerticalLayout {
+public class MineGrid extends CommonGrid<MineCell> {
 
     private static final SecureRandom RANDOM = new SecureRandom();
 
@@ -26,19 +22,34 @@ public class MineGrid extends VerticalLayout {
     private static final int COLUMNS = 10;
     private static final int MAX_MINES = RANDOM.nextInt(15, 25);
 
-    private static final MineCell[][] GRID = new MineCell[ROWS][COLUMNS];
-
     private int mineCounter;
     private int flagCounter;
 
     private Text flagText;
 
     public MineGrid() {
+        super(ROWS, COLUMNS);
         this.mineCounter = 0;
         this.flagCounter = 0;
 
-        this.createMineGrid();
         this.add(this.statistics());
+    }
+
+    @Override
+    protected MineCell newCell(final int row, final int col) {
+        final var hasMine = this.mineCounter < MAX_MINES ? RANDOM.nextFloat(1f) < 0.2f : false;
+        if (hasMine) {
+            this.mineCounter++;
+        }
+
+        final var cell = new MineCell(hasMine, row, col);
+        cell.addClickListener(this.cellClickListener());
+        return cell;
+    }
+
+    @Override
+    protected MineCell[][] newGrid(final int row, final int col) {
+        return new MineCell[row][col];
     }
 
     private HorizontalLayout statistics() {
@@ -67,34 +78,8 @@ public class MineGrid extends VerticalLayout {
         this.flagText.setText(" - " + this.flagCounter);
     }
 
-    private void createMineGrid() {
-        final var verticalLayout = new VerticalLayout();
-        verticalLayout.getStyle().setWidth("null");
-        verticalLayout.addClassNames(Border.ALL, Width.AUTO);
-        verticalLayout.setPadding(false);
-        verticalLayout.setSpacing(false);
-
-        for (int row = 0; row < ROWS; row++) {
-            final var horizontalLayout = new HorizontalLayout();
-            horizontalLayout.setPadding(false);
-            horizontalLayout.setSpacing(false);
-
-            for (int col = 0; col < COLUMNS; col++) {
-                final var hasMine = this.mineCounter < MAX_MINES ? RANDOM.nextFloat(1f) < 0.2f : false;
-                if (hasMine) {
-                    this.mineCounter++;
-                }
-                GRID[row][col] = new MineCell(hasMine, row, col);
-                GRID[row][col].addClickListener(this.cellClickListener());
-                horizontalLayout.add(GRID[row][col]);
-            }
-            verticalLayout.add(horizontalLayout);
-        }
-        this.add(verticalLayout);
-    }
-
     private void showAllMines() {
-        for (final var row : GRID) {
+        for (final var row : this.grid) {
             for (final var cell : row) {
                 cell.hit(false);
             }
@@ -132,24 +117,10 @@ public class MineGrid extends VerticalLayout {
                 this.findMinesInAdjacentCells(cell);
             }
         }
-
     }
 
     private void findMinesInAdjacentCells(final MineCell cell) {
-        final int row = cell.getRowNum();
-        final int col = cell.getColNum();
-
-        final var adjacentCells = new ArrayList<MineCell>();
-        adjacentCells.add(this.getMineCellIfValid(row - 1, col - 1));
-        adjacentCells.add(this.getMineCellIfValid(row - 1, col));
-        adjacentCells.add(this.getMineCellIfValid(row - 1, col + 1));
-        adjacentCells.add(this.getMineCellIfValid(row, col - 1));
-        adjacentCells.add(this.getMineCellIfValid(row, col + 1));
-        adjacentCells.add(this.getMineCellIfValid(row + 1, col - 1));
-        adjacentCells.add(this.getMineCellIfValid(row + 1, col));
-        adjacentCells.add(this.getMineCellIfValid(row + 1, col + 1));
-
-        adjacentCells.removeIf(Objects::isNull);
+        final var adjacentCells = this.findAdjacentCells(cell);
 
         final var numberOfMines = adjacentCells.stream().filter(MineCell::isHasMine).count();
         if (numberOfMines == 0) {
@@ -157,13 +128,6 @@ public class MineGrid extends VerticalLayout {
         } else {
             cell.updateNeighbouringMineCount(numberOfMines);
         }
-    }
-
-    private MineCell getMineCellIfValid(final int row, final int col) {
-        if (row >= 0 && row < ROWS && col >= 0 && col < COLUMNS) {
-            return GRID[row][col];
-        }
-        return null;
     }
 
 }

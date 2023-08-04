@@ -1,8 +1,6 @@
 package com.binarycodes.games.views;
 
-import org.vaadin.lineawesome.LineAwesomeIcon;
-
-import com.binarycodes.games.views.minesweeper.MineSweeperView;
+import com.binarycodes.games.util.GenericUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.Footer;
@@ -51,7 +49,9 @@ public class MainLayout extends AppLayout {
     private SideNav createNavigation() {
         final SideNav nav = new SideNav();
 
-        nav.addItem(new SideNavItem("MineSweeper", MineSweeperView.class, LineAwesomeIcon.BOMB_SOLID.create()));
+        GenericUtil.findAllGames().forEach((clazz, game) -> {
+            nav.addItem(new SideNavItem(game.title(), clazz, game.icon().create()));
+        });
 
         return nav;
     }

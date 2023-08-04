@@ -1,4 +1,4 @@
-package com.binarycodes.games.views.minesweeper;
+package com.binarycodes.games.views.sudoku;
 
 import com.binarycodes.games.util.Game;
 import com.binarycodes.games.views.MainLayout;
@@ -7,14 +7,12 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
 
-@Game(title = "MineSweeper", icon = VaadinIcon.BOMB)
-@Route(value = "mine", layout = MainLayout.class)
-@RouteAlias(value = "", layout = MainLayout.class)
-public class MineSweeperView extends VerticalLayout {
+@Game(title = "Sudoku", icon = VaadinIcon.GRID)
+@Route(value = "sudoku", layout = MainLayout.class)
+public class SudokuView extends VerticalLayout {
 
-    public MineSweeperView() {
+    public SudokuView() {
         this.getStyle().setPadding("20px");
         this.setupNewGame();
     }
@@ -27,7 +25,6 @@ public class MineSweeperView extends VerticalLayout {
             this.setupNewGame();
         }));
 
-        this.add(buttonLayout, new MineGrid());
+        this.add(buttonLayout, new SudokuGrid());
     }
-
 }

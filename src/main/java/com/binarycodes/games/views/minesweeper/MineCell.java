@@ -1,43 +1,29 @@
 package com.binarycodes.games.views.minesweeper;
 
-import java.util.Objects;
-
-import org.vaadin.lineawesome.LineAwesomeIcon;
-
+import com.binarycodes.games.util.CommonGridCell;
 import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
-import com.vaadin.flow.theme.lumo.LumoUtility.Border;
-import com.vaadin.flow.theme.lumo.LumoUtility.Display;
-import com.vaadin.flow.theme.lumo.LumoUtility.JustifyContent;
+import com.vaadin.flow.component.icon.IconFactory;
+import com.vaadin.flow.component.icon.VaadinIcon;
 
-public class MineCell extends Div {
+public class MineCell extends CommonGridCell {
 
-    public static final LineAwesomeIcon MINE_ICON = LineAwesomeIcon.BOMB_SOLID;
-    public static final LineAwesomeIcon FLAG_ICON = LineAwesomeIcon.FLAG_CHECKERED_SOLID;
-    private static final String SIZE = "35px";
+    public static final IconFactory MINE_ICON = VaadinIcon.BOMB;
+    public static final IconFactory FLAG_ICON = VaadinIcon.FLAG_CHECKERED;
 
     private final boolean hasMine;
-    private final int rowNum;
-    private final int colNum;
 
     private boolean exploded;
     private boolean flagged;
     private boolean visited;
 
     public MineCell(final boolean hasMine, final int rowNum, final int colNum) {
+        super(rowNum, colNum);
+
         this.hasMine = hasMine;
-        this.rowNum = rowNum;
-        this.colNum = colNum;
 
         this.exploded = false;
         this.flagged = false;
         this.visited = false;
-
-        this.getStyle().setHeight(SIZE);
-        this.getStyle().setWidth(SIZE);
-        this.getStyle().setCursor("pointer");
-        this.addClassNames(Border.ALL, Display.FLEX, JustifyContent.CENTER, AlignItems.CENTER);
     }
 
     public void hit(final boolean fromGamePlay) {
@@ -98,36 +84,8 @@ public class MineCell extends Div {
         return this.visited;
     }
 
-    public int getRowNum() {
-        return this.rowNum;
-    }
-
-    public int getColNum() {
-        return this.colNum;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.colNum, this.rowNum);
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof final MineCell other)) {
-            return false;
-        }
-        return this.colNum == other.colNum && this.rowNum == other.rowNum;
-    }
-
     public void updateNeighbouringMineCount(final long numberOfMines) {
         this.add(new Text(String.valueOf(numberOfMines)));
-    }
-
-    public void markToDebug() {
-        this.getStyle().setBackground("yellow");
     }
 
 }
