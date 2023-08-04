@@ -24,6 +24,7 @@ public class MineGrid extends CommonGrid<MineCell> {
 
     private int mineCounter;
     private int flagCounter;
+    private int visitCounter;
 
     private Text flagText;
 
@@ -37,6 +38,7 @@ public class MineGrid extends CommonGrid<MineCell> {
     protected void earlyInitialize() {
         this.mineCounter = 0;
         this.flagCounter = 0;
+        this.visitCounter = 0;
     }
 
     @Override
@@ -95,6 +97,9 @@ public class MineGrid extends CommonGrid<MineCell> {
         return event -> {
             final var cell = (MineCell) event.getSource();
             this.processClickOnMineCell(cell, event.isCtrlKey());
+            if (this.visitCounter == (ROWS * COLUMNS) - this.mineCounter) {
+                this.showAllMines();
+            }
         };
     }
 
@@ -115,6 +120,7 @@ public class MineGrid extends CommonGrid<MineCell> {
             this.updateFlagText();
         } else {
             cell.hit(true);
+            this.visitCounter++;
             if (cell.isExploded()) {
                 this.showAllMines();
             } else {

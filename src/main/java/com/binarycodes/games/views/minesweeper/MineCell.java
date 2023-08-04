@@ -36,9 +36,11 @@ public class MineCell extends CommonGridCell {
 
             if (!this.exploded && !this.flagged) {
                 this.exploded = true;
-                this.addMineWithColor("red");
                 if (fromGamePlay) {
+                    this.addMineWithColor("red");
                     this.getStyle().setBackground("black");
+                } else {
+                    this.addMineWithColor("black");
                 }
             }
 
