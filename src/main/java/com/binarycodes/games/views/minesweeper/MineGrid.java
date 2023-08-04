@@ -29,10 +29,14 @@ public class MineGrid extends CommonGrid<MineCell> {
 
     public MineGrid() {
         super(ROWS, COLUMNS);
-        this.mineCounter = 0;
-        this.flagCounter = 0;
 
         this.add(this.statistics());
+    }
+
+    @Override
+    protected void earlyInitialize() {
+        this.mineCounter = 0;
+        this.flagCounter = 0;
     }
 
     @Override

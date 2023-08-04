@@ -12,6 +12,11 @@ public class SudokuGrid extends CommonGrid<SudokuCell> {
     }
 
     @Override
+    protected void earlyInitialize() {
+        // do nothing
+    }
+
+    @Override
     protected SudokuCell newCell(final int row, final int col) {
         return new SudokuCell(row, col);
     }

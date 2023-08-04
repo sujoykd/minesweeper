@@ -18,9 +18,12 @@ public abstract class CommonGrid<T extends CommonGridCell> extends VerticalLayou
     public CommonGrid(final int rows, final int columns) {
         this.rows = rows;
         this.columns = columns;
+        this.earlyInitialize();
         this.grid = this.newGrid(rows, columns);
         this.createGridStructure();
     }
+
+    protected abstract void earlyInitialize();
 
     private void createGridStructure() {
         final var verticalLayout = new VerticalLayout();
