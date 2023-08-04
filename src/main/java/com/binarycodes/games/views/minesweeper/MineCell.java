@@ -23,6 +23,7 @@ public class MineCell extends Div {
 
     private boolean exploded;
     private boolean flagged;
+    private boolean visited;
 
     public MineCell(final boolean hasMine, final int rowNum, final int colNum) {
         this.hasMine = hasMine;
@@ -31,6 +32,7 @@ public class MineCell extends Div {
 
         this.exploded = false;
         this.flagged = false;
+        this.visited = false;
 
         this.getStyle().setHeight(SIZE);
         this.getStyle().setWidth(SIZE);
@@ -39,19 +41,30 @@ public class MineCell extends Div {
     }
 
     public void hit(final boolean fromGamePlay) {
+        this.visited = true;
         if (this.hasMine) {
+            if (this.flagged) {
+                this.removeAll();
+                this.addMineWithColor("green");
+            }
+
             if (!this.exploded && !this.flagged) {
                 this.exploded = true;
-                final var mine = MINE_ICON.create();
-                mine.getStyle().setColor("red");
+                this.addMineWithColor("red");
                 if (fromGamePlay) {
                     this.getStyle().setBackground("black");
                 }
-                this.add(mine);
             }
+
         } else if (fromGamePlay) {
             this.getStyle().setBackground("gray");
         }
+    }
+
+    private void addMineWithColor(final String color) {
+        final var mine = MINE_ICON.create();
+        mine.getStyle().setColor(color);
+        this.add(mine);
     }
 
     public boolean toggleFlag() {
@@ -79,6 +92,10 @@ public class MineCell extends Div {
 
     public boolean isHasMine() {
         return this.hasMine;
+    }
+
+    public boolean isVisited() {
+        return this.visited;
     }
 
     public int getRowNum() {

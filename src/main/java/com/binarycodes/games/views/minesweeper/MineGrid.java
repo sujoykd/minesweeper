@@ -2,9 +2,7 @@ package com.binarycodes.games.views.minesweeper;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -106,14 +104,14 @@ public class MineGrid extends VerticalLayout {
     private ComponentEventListener<ClickEvent<Div>> cellClickListener() {
         return event -> {
             final var cell = (MineCell) event.getSource();
-            this.processClickOnMineCell(cell, event.isCtrlKey(), new HashSet<>());
+            this.processClickOnMineCell(cell, event.isCtrlKey());
         };
     }
 
-    private void processClickOnMineCell(final MineCell cell, final boolean toggleFlagMark, final Set<MineCell> visitedCells) {
-        // do nothing if cell is already exploded or if it is flagged and we are not
-        // trying to toggle the flag
-        if (cell.isExploded() || (cell.isFlagged() && !toggleFlagMark)) {
+    private void processClickOnMineCell(final MineCell cell, final boolean toggleFlagMark) {
+        // do nothing if cell is already exploded or visited or if it is flagged and we
+        // are not trying to toggle the flag
+        if (cell.isExploded() || (cell.isFlagged() && !toggleFlagMark) || cell.isVisited()) {
             return;
         }
 
@@ -130,14 +128,13 @@ public class MineGrid extends VerticalLayout {
             if (cell.isExploded()) {
                 this.showAllMines();
             } else {
-                visitedCells.add(cell);
-                this.findMinesInAdjacentCells(cell, visitedCells);
+                this.findMinesInAdjacentCells(cell);
             }
         }
 
     }
 
-    private void findMinesInAdjacentCells(final MineCell cell, final Set<MineCell> visitedCells) {
+    private void findMinesInAdjacentCells(final MineCell cell) {
         final int row = cell.getRowNum();
         final int col = cell.getColNum();
 
@@ -155,7 +152,7 @@ public class MineGrid extends VerticalLayout {
 
         final var numberOfMines = adjacentCells.stream().filter(MineCell::isHasMine).count();
         if (numberOfMines == 0) {
-            adjacentCells.stream().filter(c -> !visitedCells.contains(c)).forEach(c -> this.processClickOnMineCell(c, false, visitedCells));
+            adjacentCells.stream().filter(c -> !c.isVisited()).forEach(c -> this.processClickOnMineCell(c, false));
         } else {
             cell.updateNeighbouringMineCount(numberOfMines);
         }
