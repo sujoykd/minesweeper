@@ -11,7 +11,7 @@ public class SudokuGrid extends CommonGrid<SudokuCell> {
     public SudokuGrid() {
         super(ROWS, COLUMNS);
 
-        final var generator = new SudokuGenerator();
+        final var generator = SudokuGenerator.for9x9();
         for (final var row : this.grid) {
             for (final var cell : row) {
                 cell.enterNumber(generator.get(cell.getRowNum(), cell.getColNum()));
