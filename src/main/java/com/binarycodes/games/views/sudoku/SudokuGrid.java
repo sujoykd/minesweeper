@@ -11,10 +11,10 @@ public class SudokuGrid extends CommonGrid<SudokuCell> {
     public SudokuGrid() {
         super(ROWS, COLUMNS);
 
-        final var generator = SudokuGenerator.for9x9();
+        final var sudoku = Sudoku9x9.create();
         for (final var row : this.grid) {
             for (final var cell : row) {
-                cell.enterNumber(generator.get(cell.getRowNum(), cell.getColNum()));
+                cell.enterNumber(sudoku.get(cell.getRowNum(), cell.getColNum()));
 
                 if (cell.getColNum() % 3 == 2) {
                     cell.getStyle().set("border-right", GRID_BORDER_STYLE);
