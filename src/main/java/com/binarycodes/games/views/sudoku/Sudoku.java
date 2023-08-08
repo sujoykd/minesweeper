@@ -5,5 +5,4 @@ public interface Sudoku {
 
     void printSudoku();
 
-    SudokuValidator isValid();
 }

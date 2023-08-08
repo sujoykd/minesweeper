@@ -14,7 +14,13 @@ public class Sudoku9x9 implements Sudoku {
     }
 
     private Sudoku9x9() {
-        this.grid = this.generate();
+        final var sudokuGrid = this.generate();
+        final SudokuValidator validation = this.validateSudoku(sudokuGrid);
+        if (validation.valid()) {
+            this.grid = sudokuGrid;
+        } else {
+            throw new RuntimeException(validation.invalidReason());
+        }
     }
 
     @Override
@@ -26,7 +32,7 @@ public class Sudoku9x9 implements Sudoku {
     }
 
     private boolean validCoordinate(final int row, final int col) {
-        if (row < 0 || row >= Sudoku9x9.SIZE || col < 0 || col >= Sudoku9x9.SIZE) {
+        if (row < 0 || row >= SIZE || col < 0 || col >= SIZE) {
             return false;
         }
         return true;
@@ -42,17 +48,17 @@ public class Sudoku9x9 implements Sudoku {
         }
     }
 
-    private SudokuValidator validateSudoku(final int[][] grid) {
-        if (grid.length != Sudoku9x9.SIZE) {
-            final var reason = "Incorrect length of grid. Expected %d, got %d".formatted(Sudoku9x9.SIZE, grid.length);
+    private SudokuValidator validateSudoku(final int[][] sudokuGrid) {
+        if (sudokuGrid.length != SIZE) {
+            final var reason = "Incorrect length of grid. Expected %d, got %d".formatted(SIZE, sudokuGrid.length);
             return SudokuValidator.notOk(reason);
         }
 
-        final int[] referenceArray = IntStream.rangeClosed(1, Sudoku9x9.SIZE).toArray();
+        final int[] referenceArray = IntStream.rangeClosed(1, SIZE).toArray();
 
         // validate all rows
-        for (int row = 0; row < Sudoku9x9.SIZE; row++) {
-            final int[] rowArray = grid[row];
+        for (int row = 0; row < SIZE; row++) {
+            final int[] rowArray = sudokuGrid[row];
 
             if (!this.arrayEquals(rowArray, referenceArray)) {
                 final var reason = "Invalid data in row %d. Expected %s, got %s".formatted(row, Arrays.toString(referenceArray), Arrays.toString(rowArray));
@@ -61,9 +67,9 @@ public class Sudoku9x9 implements Sudoku {
         }
 
         // validate all columns
-        for (int col = 0; col < Sudoku9x9.SIZE; col++) {
+        for (int col = 0; col < SIZE; col++) {
             final int column = col;
-            final int[] colArray = Arrays.stream(grid).map(arr -> arr[column]).mapToInt(Integer::intValue).toArray();
+            final int[] colArray = Arrays.stream(sudokuGrid).map(arr -> arr[column]).mapToInt(Integer::intValue).toArray();
 
             if (!this.arrayEquals(colArray, referenceArray)) {
                 final var reason = "Invalid data in col %d. Expected %s, got %s".formatted(column, Arrays.toString(referenceArray), Arrays.toString(colArray));
@@ -72,8 +78,8 @@ public class Sudoku9x9 implements Sudoku {
         }
 
         // validate all submatrices
-        final var subMatrices = this.sudokuInnerSubMatrixArrays();
-        for (int sub = 0; sub < Sudoku9x9.SIZE; sub++) {
+        final var subMatrices = this.sudokuInnerSubMatrixArrays(sudokuGrid);
+        for (int sub = 0; sub < SIZE; sub++) {
             final var subMatrix = subMatrices[sub];
 
             if (!this.arrayEquals(subMatrix, referenceArray)) {
@@ -84,23 +90,23 @@ public class Sudoku9x9 implements Sudoku {
         return SudokuValidator.ok();
     }
 
-    private int[][] sudokuInnerSubMatrixArrays() {
-        final int[][] subArrays = new int[Sudoku9x9.SIZE][];
+    private int[][] sudokuInnerSubMatrixArrays(final int[][] sudokuGrid) {
+        final int[][] subArrays = new int[SIZE][];
 
         // top three submatrix
-        subArrays[0] = this.subMatrixArray(this.grid, 0, 0, 2, 2);
-        subArrays[1] = this.subMatrixArray(this.grid, 0, 3, 2, 5);
-        subArrays[2] = this.subMatrixArray(this.grid, 0, 6, 2, 8);
+        subArrays[0] = this.subMatrixArray(sudokuGrid, 0, 0, 2, 2);
+        subArrays[1] = this.subMatrixArray(sudokuGrid, 0, 3, 2, 5);
+        subArrays[2] = this.subMatrixArray(sudokuGrid, 0, 6, 2, 8);
 
         // middle three submatrix
-        subArrays[3] = this.subMatrixArray(this.grid, 3, 0, 5, 2);
-        subArrays[4] = this.subMatrixArray(this.grid, 3, 3, 5, 5);
-        subArrays[5] = this.subMatrixArray(this.grid, 3, 6, 5, 8);
+        subArrays[3] = this.subMatrixArray(sudokuGrid, 3, 0, 5, 2);
+        subArrays[4] = this.subMatrixArray(sudokuGrid, 3, 3, 5, 5);
+        subArrays[5] = this.subMatrixArray(sudokuGrid, 3, 6, 5, 8);
 
         // bottom three submatrix
-        subArrays[6] = this.subMatrixArray(this.grid, 6, 0, 8, 2);
-        subArrays[7] = this.subMatrixArray(this.grid, 6, 3, 8, 5);
-        subArrays[8] = this.subMatrixArray(this.grid, 6, 6, 8, 8);
+        subArrays[6] = this.subMatrixArray(sudokuGrid, 6, 0, 8, 2);
+        subArrays[7] = this.subMatrixArray(sudokuGrid, 6, 3, 8, 5);
+        subArrays[8] = this.subMatrixArray(sudokuGrid, 6, 6, 8, 8);
 
         return subArrays;
     }
@@ -111,11 +117,11 @@ public class Sudoku9x9 implements Sudoku {
         }
 
         final int numberOfElements = ((colEnd - colStart) + 1) * ((rowEnd - rowStart) + 1);
-        if (numberOfElements != Sudoku9x9.SIZE) {
+        if (numberOfElements != SIZE) {
             return null;
         }
 
-        final int[] subArray = new int[Sudoku9x9.SIZE];
+        final int[] subArray = new int[SIZE];
 
         int count = 0;
         for (int i = rowStart; i <= rowEnd; i++) {
@@ -146,9 +152,9 @@ public class Sudoku9x9 implements Sudoku {
     }
 
     private int[][] generate() {
-        final int[][] sudokuGrid = new int[Sudoku9x9.SIZE][Sudoku9x9.SIZE];
+        final int[][] sudokuGrid = new int[SIZE][SIZE];
 
-        final var list = IntStream.rangeClosed(1, Sudoku9x9.SIZE).boxed().collect(Collectors.toList());
+        final var list = IntStream.rangeClosed(1, SIZE).boxed().collect(Collectors.toList());
 
         // randomize
         Collections.shuffle(list);
@@ -187,11 +193,6 @@ public class Sudoku9x9 implements Sudoku {
         sudokuGrid[8] = list.stream().mapToInt(Integer::intValue).toArray();
 
         return sudokuGrid;
-    }
-
-    @Override
-    public SudokuValidator isValid() {
-        return this.validateSudoku(this.grid);
     }
 
 }

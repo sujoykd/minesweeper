@@ -7,10 +7,11 @@ class SudokuGeneratorTest {
 
     @Test
     void test() {
-        final var sudoku = Sudoku9x9.create();
-        final var sudokuValidator = sudoku.isValid();
-        Assertions.assertNull(sudokuValidator.invalidReason());
-        Assertions.assertTrue(sudokuValidator.valid());
+        try {
+            Sudoku9x9.create();
+        } catch (final RuntimeException ex) {
+            Assertions.fail(ex.getMessage());
+        }
     }
 
 }
