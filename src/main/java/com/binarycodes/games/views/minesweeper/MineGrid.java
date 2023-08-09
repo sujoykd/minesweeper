@@ -7,6 +7,7 @@ import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
@@ -75,6 +76,7 @@ public class MineGrid extends CommonGrid<MineCell> {
         final var showAllMinesBtn = new Button("Show All Mines", event -> {
             this.showAllMines();
         });
+        showAllMinesBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
         stats.add(mineStats, flagStats, showAllMinesBtn);
         return stats;

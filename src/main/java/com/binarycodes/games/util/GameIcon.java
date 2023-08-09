@@ -3,6 +3,7 @@ package com.binarycodes.games.util;
 import com.vaadin.flow.component.html.Image;
 
 public enum GameIcon {
+    CARD_GAMES("card-games.png"),
     MINESWEEPER("bomb.png"),
     SUDOKU("sudoku.png"),
     TIC_TAC_TOE("tic-tac-toe.png");
