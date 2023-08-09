@@ -14,8 +14,8 @@ public class TicTacToeGrid extends CommonGrid<TicTacToeCell> {
     private static final SecureRandom RANDOM = new SecureRandom();
 
     private static final int SIZE = 3;
-    private static final char USER_MARK = 'X';
-    private static final char AI_MARK = 'O';
+    private static final char USER_MARK = '✘';
+    private static final char AI_MARK = '◯';
 
     private int visitCounter;
 
