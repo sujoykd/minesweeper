@@ -5,7 +5,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.PageTitle;
 
 import jakarta.validation.OverridesAttribute;
@@ -14,9 +13,9 @@ import jakarta.validation.OverridesAttribute;
 @Target(ElementType.TYPE)
 @PageTitle("")
 public @interface Game {
-
+    
     @OverridesAttribute(constraint = PageTitle.class, name = "value")
     String title();
-
-    VaadinIcon icon();
+    
+    GameIcon icon();
 }

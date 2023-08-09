@@ -21,7 +21,18 @@ public abstract class CommonGridCell extends Div {
         this.getStyle().setHeight(SIZE);
         this.getStyle().setWidth(SIZE);
         this.getStyle().setCursor("pointer");
-        this.addClassNames(Border.ALL, Display.FLEX, JustifyContent.CENTER, AlignItems.CENTER);
+        this.addClassNames(Display.FLEX, JustifyContent.CENTER, AlignItems.CENTER);
+
+        this.style();
+    }
+
+    protected void size(final String cssHeight, final String cssWidth) {
+        this.getStyle().setHeight(cssHeight);
+        this.getStyle().setWidth(cssWidth);
+    }
+
+    protected void style() {
+        this.addClassNames(Border.ALL);
     }
 
     @Override

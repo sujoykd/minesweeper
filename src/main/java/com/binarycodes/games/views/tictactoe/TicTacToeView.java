@@ -1,4 +1,4 @@
-package com.binarycodes.games.views.sudoku;
+package com.binarycodes.games.views.tictactoe;
 
 import com.binarycodes.games.util.Game;
 import com.binarycodes.games.util.GameIcon;
@@ -8,11 +8,11 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
-@Game(title = "Sudoku", icon = GameIcon.SUDOKU)
-@Route(value = "sudoku", layout = MainLayout.class)
-public class SudokuView extends VerticalLayout {
+@Game(title = "TicTacToe", icon = GameIcon.TIC_TAC_TOE)
+@Route(value = "tictactoe", layout = MainLayout.class)
+public class TicTacToeView extends VerticalLayout {
 
-    public SudokuView() {
+    public TicTacToeView() {
         this.getStyle().setPadding("20px");
         this.setupNewGame();
     }
@@ -25,6 +25,6 @@ public class SudokuView extends VerticalLayout {
             this.setupNewGame();
         }));
 
-        this.add(buttonLayout, new SudokuGrid());
+        this.add(buttonLayout, new TicTacToeGrid());
     }
 }

@@ -1,15 +1,15 @@
 package com.binarycodes.games.views.minesweeper;
 
 import com.binarycodes.games.util.Game;
+import com.binarycodes.games.util.GameIcon;
 import com.binarycodes.games.views.MainLayout;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 
-@Game(title = "MineSweeper", icon = VaadinIcon.BOMB)
+@Game(title = "MineSweeper", icon = GameIcon.MINESWEEPER)
 @Route(value = "mine", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
 public class MineSweeperView extends VerticalLayout {

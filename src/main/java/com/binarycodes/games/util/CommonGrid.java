@@ -15,20 +15,21 @@ public abstract class CommonGrid<T extends CommonGridCell> extends VerticalLayou
     private final int rows;
     private final int columns;
 
-    public CommonGrid(final int rows, final int columns) {
+    public CommonGrid(final int rows, final int columns, final boolean hasBorder) {
         this.rows = rows;
         this.columns = columns;
         this.earlyInitialize();
         this.grid = this.newGrid(rows, columns);
-        this.createGridStructure();
+        this.createGridStructure(hasBorder);
     }
 
     protected abstract void earlyInitialize();
 
-    private void createGridStructure() {
+    private void createGridStructure(final boolean hasBorder) {
         final var verticalLayout = new VerticalLayout();
         verticalLayout.getStyle().setWidth("null");
-        verticalLayout.addClassNames(Border.ALL, Width.AUTO);
+        verticalLayout.addClassNames(Width.AUTO);
+        verticalLayout.addClassNames(hasBorder ? Border.ALL : Border.NONE);
         verticalLayout.setPadding(false);
         verticalLayout.setSpacing(false);
 
@@ -74,6 +75,32 @@ public abstract class CommonGrid<T extends CommonGridCell> extends VerticalLayou
             return this.grid[row][col];
         }
         return null;
+    }
+
+    protected List<List<T>> allLinesPassingThrough(final T cell) {
+        final int cellRow = cell.getRowNum();
+        final int cellCol = cell.getColNum();
+
+        final List<T> vertical = List.of(this.grid).stream().map(arr -> arr[cellCol]).toList();
+        final List<T> horizontal = List.of(this.grid[cellRow]);
+
+        final List<T> leftDiagonal = new ArrayList<>();
+        final List<T> rightDiagonal = new ArrayList<>();
+
+        for (int rowNum = 0; rowNum < this.rows; rowNum++) {
+            final int rowDiff = Math.abs(rowNum - cellRow);
+
+            final int leftDiagonalCol = rowNum <= cellRow ? cellCol - rowDiff : cellCol + rowDiff;
+            final int rightDiagonalCol = rowNum <= cellRow ? cellCol + rowDiff : cellCol - rowDiff;
+
+            leftDiagonal.add(this.getCellIfValid(rowNum, leftDiagonalCol));
+            rightDiagonal.add(this.getCellIfValid(rowNum, rightDiagonalCol));
+        }
+
+        leftDiagonal.removeIf(Objects::isNull);
+        rightDiagonal.removeIf(Objects::isNull);
+
+        return List.of(vertical, horizontal, rightDiagonal, leftDiagonal);
     }
 
 }

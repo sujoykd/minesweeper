@@ -8,14 +8,16 @@ public class SudokuCell extends CommonGridCell {
 
     public SudokuCell(final int rowNum, final int colNum) {
         super(rowNum, colNum);
-        this.style();
     }
 
     public void enterNumber(final int number) {
         this.add(new Text(String.valueOf(number)));
     }
 
-    private void style() {
+    @Override
+    protected void style() {
+        super.style();
+
         if (this.getColNum() % 3 == 2) {
             this.getStyle().set("border-right", GRID_BORDER_STYLE);
         }

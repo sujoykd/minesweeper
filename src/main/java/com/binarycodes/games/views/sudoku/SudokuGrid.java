@@ -8,7 +8,7 @@ public class SudokuGrid extends CommonGrid<SudokuCell> {
     private Sudoku sudoku;
 
     public SudokuGrid() {
-        super(SIZE, SIZE);
+        super(SIZE, SIZE, true);
     }
 
     @Override

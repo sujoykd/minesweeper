@@ -29,7 +29,7 @@ public class MineGrid extends CommonGrid<MineCell> {
     private Text flagText;
 
     public MineGrid() {
-        super(ROWS, COLUMNS);
+        super(ROWS, COLUMNS, true);
 
         this.add(this.statistics());
     }
