@@ -28,4 +28,8 @@ public enum CardType {
         return this != HOFMARSCHALL;
     }
 
+    public boolean hasNextAction() {
+        return this != KÖNIG || this != HOFNARR;
+    }
+
 }

@@ -1,11 +1,13 @@
 package com.binarycodes.games.views.palacewhisperings;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.shared.Registration;
 
 public class PlayerCardStack extends VerticalLayout {
 
@@ -14,11 +16,10 @@ public class PlayerCardStack extends VerticalLayout {
 
     public PlayerCardStack(final Player player) {
         this.player = player;
+
         this.setSpacing(false);
         this.setPadding(false);
-
-        this.getStyle().setPadding("5em");
-        this.getStyle().set("gap", "3em");
+        this.addClassName("card-player-stack");
 
         this.showName();
 
@@ -60,20 +61,33 @@ public class PlayerCardStack extends VerticalLayout {
         cardImage.addClickListener(event -> {
             final boolean validPlay = this.player.playCard(card);
             this.showDeck();
+            if (validPlay) {
+                this.fireEvent(new CardPlayEvent(this, card));
+            }
         });
 
         return cardImage;
     }
 
     private void showName() {
-        final var displayText = this.player.getName() + " - " + this.player.getColor();
-        final var displaySpan = new Span(displayText);
-        final var display = new Div(displaySpan);
-        display.getStyle().set("background-color", this.player.getColor().getTintShade());
-        display.getStyle().set("color", "#e1e1e1");
-        display.getStyle().set("padding", "1em 5em");
-        display.getStyle().set("border-radius", "100px");
+        final var displaySpan = new Span(this.player.getName());
+
+        final var colorBadge = new Div();
+        colorBadge.addClassName("card-player-color-badge");
+        colorBadge.getStyle().set("background-color", this.player.getColor().getTintShade());
+
+        final var display = new HorizontalLayout(displaySpan, colorBadge);
+        display.addClassName("card-player-name-badge");
+
         this.add(display);
+    }
+
+    protected Registration addCardPlayedListener(final ComponentEventListener<CardPlayEvent> listener) {
+        return super.addListener(CardPlayEvent.class, listener);
+    }
+
+    public Player getPlayer() {
+        return this.player;
     }
 
 }
