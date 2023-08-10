@@ -1,3 +1,40 @@
 game-card:not(:first-child) {
-    margin-left: -80px;
+    margin-left: -100px;
+}
+
+game-card:not(:last-child):hover {
+    transform: translateY(-10px) translateX(-130px);
+    transition: 0.4s ease-out;
+}
+
+game-card:hover~game-card {
+    position: relative;
+    left: 50px;
+    transition: 0.4s ease-out;
+}
+
+.palast-card {
+    border-radius: 10px;
+    box-shadow: rgb(90 90 90) -1rem 0px 2rem;
+    transition: 0.4s ease-out;
+}
+
+.palast-card:not(:first-child) {
+    margin-left: -180px;
+}
+
+.palast-card:not(:last-child):hover {
+    transform: translateY(-10px) translateX(-130px);
+    transition: 0.4s ease-out;
+}
+
+.palast-card:last-child:hover {
+    transform: translateY(-10px) translateX(-10px);
+    transition: 0.4s ease-out;
+}
+
+.palast-card:hover~.palast-card {
+    position: relative;
+    left: 10px;
+    transition: 0.4s ease-out;
 }

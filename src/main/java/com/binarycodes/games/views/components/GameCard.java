@@ -1,4 +1,4 @@
-package com.binarycodes.games.views.cards;
+package com.binarycodes.games.views.components;
 
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.JsModule;

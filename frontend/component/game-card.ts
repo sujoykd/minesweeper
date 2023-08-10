@@ -15,21 +15,10 @@ export class GameCard extends LitElement {
           width: 200px;
           background-color: rgb(235 235 235);
           border-radius: 10px;
-          box-shadow: rgb(90 90 90) -1rem 0px 3rem;
+          box-shadow: rgb(90 90 90) -1rem 0px 2rem;
           transition: 0.4s ease-out;
           position: relative;
           left: 0px;
-        }
-               
-        .card:hover {
-          transform: translateY(-30px) translateX(-60px);
-          transition: 0.4s ease-out;
-        }
-        
-        .card:hover ~ .card {
-          position: relative;
-          left: 50px;
-          transition: 0.4s ease-out;
         }
         
         .title {
@@ -57,7 +46,6 @@ export class GameCard extends LitElement {
         .filledbar {
           position: absolute;
           top: 0px;
-          z-index: 3;
           width: 0px;
           height: 100%;
           background: rgb(0,154,217);
@@ -67,7 +55,7 @@ export class GameCard extends LitElement {
         
         .card:hover .filledbar {
           width: 120px;
-          transition: 0.4s ease-out;
+          transition: 0.4s ease-in;
         }
         
         .circle {
