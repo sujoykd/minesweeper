@@ -2,6 +2,9 @@ package com.binarycodes.games.views.palacewhisperings;
 
 import org.junit.jupiter.api.Test;
 
+import com.binarycodes.games.views.palacewhisperings.service.CardColor;
+import com.binarycodes.games.views.palacewhisperings.service.CardType;
+
 class CardColorTest {
 
     @Test

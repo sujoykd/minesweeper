@@ -1,4 +1,4 @@
-package com.binarycodes.games.views.palacewhisperings;
+package com.binarycodes.games.views.palacewhisperings.service;
 
 public class Card {
     private static final String IMAGE_NAME_FORMAT = "images/palastgefluster/%s.png";

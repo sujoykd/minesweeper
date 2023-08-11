@@ -1,4 +1,4 @@
-package com.binarycodes.games.views.palacewhisperings;
+package com.binarycodes.games.views.palacewhisperings.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +49,15 @@ public class Player {
 
     public List<Card> getCards() {
         return this.cards;
+    }
+
+    public boolean takeCardFromDisplay(final Card card) {
+        if (this.isCardTypeDisplayed(card)) {
+            this.displayedCards.remove(card);
+            this.cards.add(card);
+            return true;
+        }
+        return false;
     }
 
 }

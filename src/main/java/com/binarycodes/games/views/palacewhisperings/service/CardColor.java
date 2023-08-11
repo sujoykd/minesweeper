@@ -1,7 +1,4 @@
-package com.binarycodes.games.views.palacewhisperings;
-
-import java.util.List;
-import java.util.stream.Stream;
+package com.binarycodes.games.views.palacewhisperings.service;
 
 public enum CardColor {
     RED("#b5201b"),
@@ -19,10 +16,6 @@ public enum CardColor {
 
     public boolean isPlayerType() {
         return this != BROWN;
-    }
-
-    public static List<CardColor> allPlayingCardColors() {
-        return Stream.concat(Stream.of(CardColor.values()), Stream.of(CardColor.BROWN)).toList();
     }
 
     public static CardColor kingCardColor() {

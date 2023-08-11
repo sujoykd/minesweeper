@@ -15,8 +15,8 @@ game-card:hover~game-card {
 
 
 .card-player-stack {
-    padding: 5em;
-    gap: 3em;
+    padding: 3em;
+    gap: 2em;
     background-color: whitesmoke;
 }
 
@@ -49,7 +49,6 @@ game-card:hover~game-card {
 
 .card-player-name-badge {
     border-radius: 100px;
-    padding: 1em 5em;
     background-color: #363636;
     color: #e3dfdf;
     font-weight: bold;
@@ -61,4 +60,40 @@ game-card:hover~game-card {
     width: 20px;
     border-radius: 50%;
     border: 3px solid #e3dfdf;
+}
+
+
+.card-inhand-view .card-image-view {
+    height: 300px;
+    width: 200px;
+}
+
+.card-displayed-view .card-image-view {
+    height: 150px;
+    width: 100px;
+}
+
+.card-player-stack-displayed-view .card-player-name-badge {
+    padding: 0.5em 0.875em;
+}
+
+.card-player-stack-inhand-view .card-player-name-badge {
+    padding: 1em 3em;
+}
+
+.card-player-stack-displayed-view {
+    padding: 2em 0em 0em 2em;
+    gap: 1em;
+}
+
+.card-player-stack-displayed-view:last-child {
+    padding-bottom: 2em;
+}
+
+
+.message-bar {
+    background: #0758a9;
+    width: 100%;
+    color: #ffffff;
+    padding: 0.5em;
 }
