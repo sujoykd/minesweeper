@@ -37,17 +37,15 @@ public class CardTableView extends VerticalLayout {
             final var dialog = switch (card.getType()) {
                 case HOFMARSCHALL -> null;
                 case MUNDSCHENK -> {
-                    // exchange a card in display with others display
-                    yield new Mundschenk(player, this.gameController.getAllPlayers());
+
+                    yield new Mundschenk(player, this.gameController);
                 }
                 case SCHATZMEISTER -> null;
                 case WÄCHTER -> {
-                    // take back a card from display
                     yield new Wachter(player);
                 }
                 case ZAUBERER -> null;
                 case ZOFE -> {
-                    // discard a card from hand and draw a new one
                     yield new Zofe(player, this.gameController);
                 }
                 default -> null;

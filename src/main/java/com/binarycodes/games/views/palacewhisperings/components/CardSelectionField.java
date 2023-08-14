@@ -26,7 +26,7 @@ public class CardSelectionField extends CustomField<Card> {
 
     @Override
     protected void setPresentationValue(final Card card) {
-        this.cardStackView.markSelectedCard(card);
+        this.cardSelected(card);
     }
 
 }

@@ -1,47 +1,44 @@
 package com.binarycodes.games.views.palacewhisperings.components.cardaction;
 
-import java.util.List;
-
-import com.binarycodes.games.views.palacewhisperings.components.CardStackView;
+import com.binarycodes.games.views.palacewhisperings.components.CardSelectionField;
+import com.binarycodes.games.views.palacewhisperings.components.CardSelectionGroupField;
 import com.binarycodes.games.views.palacewhisperings.service.Card;
 import com.binarycodes.games.views.palacewhisperings.service.CardType;
+import com.binarycodes.games.views.palacewhisperings.service.GameController;
 import com.binarycodes.games.views.palacewhisperings.service.Player;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 public class Mundschenk extends Dialog {
 
-    private final Player player;
-    private final List<Player> allPlayers;
+    private static final String LABEL_SELF = "Select the exchange from your display";
+    private static final String LABEL_OTHERS = "Select the exchange from your display";
 
-    public Mundschenk(final Player player, final List<Player> allPlayers) {
-        this.player = player;
-        this.allPlayers = allPlayers;
+    private final GameController gameController;
+
+    public Mundschenk(final Player player, final GameController gameController) {
+        this.gameController = gameController;
+
+        final var selfPickList = player.getDisplayedCards().stream().filter(card -> card.getType() != CardType.WÄCHTER).toList();
+        final var otherPickList = gameController.getAllPlayers().stream().map(Player::getDisplayedCards).toList();
+
+        final var selfField = new CardSelectionField(LABEL_SELF, selfPickList);
+        final var othersField = new CardSelectionGroupField(LABEL_OTHERS, otherPickList);
+
+        final var submitBtn = new Button("Done", event -> {
+            this.submit(selfField.getValue(), othersField.getValue());
+        });
+
+        final var layout = new VerticalLayout(selfField, othersField, submitBtn);
+        this.add(layout);
 
         this.setCloseOnOutsideClick(false);
         this.setCloseOnEsc(false);
-
-        this.init();
     }
 
-    private void init() {
-        final var layout = new VerticalLayout();
-
-        layout.add(new Span("Choose a card to exchange"));
-        final List<Card> cards = this.player.getDisplayedCards().stream().filter(card -> card.getType() != CardType.MUNDSCHENK).toList();
-        final var playersDeck = new CardStackView(cards);
-        layout.add(playersDeck);
-
-        layout.add(new Span("Choose a card to exchange with"));
-
-        this.allPlayers.stream()
-                       .filter(p -> p != this.player)
-                       .forEach(p -> {
-                           final var stackView = new CardStackView(p.getDisplayedCards());
-                           layout.add(stackView);
-                       });
-
-        this.add(layout);
+    private void submit(final Card selfCard, final Card othersCard) {
+        this.gameController.swapDisplayedCard(selfCard, othersCard);
     }
+
 }

@@ -2,7 +2,11 @@ package com.binarycodes.games.views.palacewhisperings.service;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class GameController {
 
@@ -13,9 +17,11 @@ public class GameController {
     private CardDeck deck;
     private List<Player> allPlayers;
     private final List<CardColor> playingColors;
+    private final Map<Card, Player> cardPlayerMap;
 
     public GameController() {
         this.playingColors = new ArrayList<>(MAX_PLAYERS);
+        this.cardPlayerMap = new HashMap<>(MAX_PLAYERS * CardDeck.PLAYER_DEAL_CARD_SIZE);
     }
 
     public List<Player> createAllPlayers() {
@@ -40,7 +46,10 @@ public class GameController {
 
     private Player createPlayer(final String name, final CardColor color) {
         final var cards = this.deck.startingCardsForPlayer();
-        return new Player(name, color, cards);
+        final var player = new Player(name, color, cards);
+        final var map = cards.stream().collect(Collectors.toMap(Function.identity(), card -> player));
+        this.cardPlayerMap.putAll(map);
+        return player;
     }
 
     public CardColor nextPlayerColor(final Player player, final Card card) {
@@ -73,6 +82,35 @@ public class GameController {
 
     public Card drawCardFromDeck() {
         return this.deck.draw();
+    }
+
+    public void swapDisplayedCard(final Card selfCard, final Card othersCard) {
+        if (!this.cardPlayerMap.containsKey(selfCard) || !this.cardPlayerMap.containsKey(othersCard)) {
+            throw new UnsupportedOperationException("Illegal card. Player for the card not found.");
+        }
+
+        final var player = this.cardPlayerMap.get(selfCard);
+        final var other = this.cardPlayerMap.get(selfCard);
+
+        // cannot force a palace whisper by swapping display cards
+        final var playerError = player.getDisplayedCards().stream().anyMatch(card -> card.getType() == othersCard.getType());
+        final var otherError = other.getDisplayedCards().stream().anyMatch(card -> card.getType() == selfCard.getType());
+
+        if (playerError || otherError) {
+            throw new UnsupportedOperationException("Forcing a palace whisper is not allowed");
+        }
+
+        // remove cards from corresponding players
+        player.getDisplayedCards().remove(selfCard);
+        other.getDisplayedCards().remove(othersCard);
+
+        // change card ownership
+        this.cardPlayerMap.put(selfCard, other);
+        this.cardPlayerMap.put(othersCard, player);
+
+        // allocate cards to players
+        player.getDisplayedCards().add(othersCard);
+        other.getDisplayedCards().add(selfCard);
     }
 
 }
