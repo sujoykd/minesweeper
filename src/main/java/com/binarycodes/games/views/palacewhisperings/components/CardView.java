@@ -22,4 +22,8 @@ public class CardView extends Image {
         });
     }
 
+    public Card getCard() {
+        return this.card;
+    }
+
 }

@@ -48,7 +48,7 @@ public class PlayerDeck extends VerticalLayout {
         }
 
         if (showDisplayed) {
-            final var dispalyedCards = new CardStackView(this.player.getDisplayedCards(), null);
+            final var dispalyedCards = new CardStackView(this.player.getDisplayedCards());
             dispalyedCards.addClassName("card-displayed-view");
             this.deckArea.add(dispalyedCards);
         }

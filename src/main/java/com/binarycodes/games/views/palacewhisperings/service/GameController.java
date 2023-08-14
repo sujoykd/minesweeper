@@ -71,4 +71,8 @@ public class GameController {
         return this.allPlayers;
     }
 
+    public Card drawCardFromDeck() {
+        return this.deck.draw();
+    }
+
 }

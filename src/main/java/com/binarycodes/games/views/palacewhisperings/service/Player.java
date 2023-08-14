@@ -2,6 +2,7 @@ package com.binarycodes.games.views.palacewhisperings.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Player {
     private final String name;
@@ -35,6 +36,13 @@ public class Player {
                                   .isPresent();
     }
 
+    private boolean isCardTypeInHand(final Card playCard) {
+        return this.cards.stream()
+                         .filter(card -> card.getType() == playCard.getType())
+                         .findAny()
+                         .isPresent();
+    }
+
     public CardColor getColor() {
         return this.color;
     }
@@ -58,6 +66,31 @@ public class Player {
             return true;
         }
         return false;
+    }
+
+    public boolean replaceCardInHand(final Card dropCard, final Card newCard) {
+        if (this.isCardTypeInHand(dropCard)) {
+            this.cards.remove(dropCard);
+            this.cards.add(newCard);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.name);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof final Player other)) {
+            return false;
+        }
+        return Objects.equals(this.name, other.name);
     }
 
 }

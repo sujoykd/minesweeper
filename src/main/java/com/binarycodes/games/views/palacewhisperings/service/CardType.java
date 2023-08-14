@@ -28,19 +28,24 @@ public enum CardType {
         return this != HOFMARSCHALL;
     }
 
-    public boolean hasNextAction(final Player player) {
+    public boolean hasNextAction(final Player player, final GameController gameController) {
         return switch (this) {
-            case HOFMARSCHALL -> false;
+            case HOFMARSCHALL -> true;
             case HOFNARR -> false;
             case KÖNIG -> false;
-            case MUNDSCHENK -> false;
+            case MUNDSCHENK -> {
+                final var playerHaveCardToExchange = player.getDisplayedCards().stream().anyMatch(card -> card.getType() != this);
+                final var othersHaveCardToExchange = gameController.getAllPlayers().stream().filter(p -> p != player).anyMatch(p -> p.getDisplayedCards().size() > 0);
+
+                yield playerHaveCardToExchange && othersHaveCardToExchange;
+            }
             case SCHATZMEISTER -> false;
             case WÄCHTER -> {
-                final var cardsAvailableToTakeBack = player.getDisplayedCards().stream().anyMatch(card -> card.getType() != WÄCHTER);
+                final var cardsAvailableToTakeBack = player.getDisplayedCards().stream().anyMatch(card -> card.getType() != this);
                 yield cardsAvailableToTakeBack;
             }
             case ZAUBERER -> false;
-            case ZOFE -> false;
+            case ZOFE -> !player.getCards().isEmpty();
             default -> false;
         };
     }

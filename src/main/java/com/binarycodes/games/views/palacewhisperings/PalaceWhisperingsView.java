@@ -76,29 +76,25 @@ public class PalaceWhisperingsView extends VerticalLayout {
     }
 
     private void handleCardPlay(final PlayerView currentPlayerView, final Card card) {
-        this.tableView.update(this.gameController);
+        this.tableView.update();
 
         final var player = currentPlayerView.getPlayer();
 
         final var messageText = "%s played %s %s".formatted(player.getName(), card.getColor().name().toLowerCase(), StringUtils.capitalize(card.getType().name().toLowerCase()));
         this.messageBar.update(messageText);
 
-        if (card.getType().hasNextAction(player)) {
-            final var dialog = this.tableView.nextAction(player, card);
-            if (dialog != null) {
-                dialog.open();
+        final var actionDialog = this.tableView.nextAction(player, card);
 
-                dialog.addOpenedChangeListener(event -> {
-                    if (!event.isOpened()) {
-                        this.tableView.update(this.gameController);
-                        currentPlayerView.update();
-                        this.moveToNextPlayer(currentPlayerView, card);
-                    }
-                });
-            }
-        } else {
-            this.moveToNextPlayer(currentPlayerView, card);
-        }
+        actionDialog.ifPresentOrElse(dialog -> {
+            dialog.open();
+            dialog.addOpenedChangeListener(event -> {
+                if (!event.isOpened()) {
+                    this.tableView.update();
+                    currentPlayerView.update();
+                    this.moveToNextPlayer(currentPlayerView, card);
+                }
+            });
+        }, () -> this.moveToNextPlayer(currentPlayerView, card));
     }
 
     private void moveToNextPlayer(final PlayerView currentPlayerView, final Card card) {

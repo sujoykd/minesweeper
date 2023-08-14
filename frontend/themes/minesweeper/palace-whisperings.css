@@ -68,7 +68,7 @@ game-card:hover~game-card {
     width: 200px;
 }
 
-.card-displayed-view .card-image-view {
+.card-displayed-view .card-image-view, .card-stack-view .card-image-view {
     height: 150px;
     width: 100px;
 }
@@ -96,4 +96,17 @@ game-card:hover~game-card {
     width: 100%;
     color: #ffffff;
     padding: 0.5em;
+}
+
+.card-stack-view .card-selected {
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    transform: scale(1.1);
+}
+
+.card-clickable {
+    cursor: pointer;
+}
+
+vaadin-custom-field::part(label) {
+    margin-bottom: 1em;
 }
