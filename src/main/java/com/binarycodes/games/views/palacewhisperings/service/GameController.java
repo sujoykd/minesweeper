@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -19,9 +20,12 @@ public class GameController {
     private final List<CardColor> playingColors;
     private final Map<Card, Player> cardPlayerMap;
 
+    private Optional<Card> kingCardInEffect;
+
     public GameController() {
         this.playingColors = new ArrayList<>(MAX_PLAYERS);
         this.cardPlayerMap = new HashMap<>(MAX_PLAYERS * CardDeck.PLAYER_DEAL_CARD_SIZE);
+        this.kingCardInEffect = Optional.empty();
     }
 
     public List<Player> createAllPlayers() {
@@ -117,6 +121,25 @@ public class GameController {
         // allocate cards to players
         player.getDisplayedCards().add(othersCard);
         other.getDisplayedCards().add(selfCard);
+    }
+
+    public Card newKing() {
+        final var kingCard = this.deck.drawKing();
+        this.kingCardInEffect = Optional.of(kingCard);
+        return kingCard;
+    }
+
+    public Optional<Card> getKingCardInEffect() {
+        return this.kingCardInEffect;
+    }
+
+    public boolean canPlay(final Card card) {
+        return this.kingCardInEffect.map(king -> {
+            if (king.getType() != card.getType()) {
+                return true;
+            }
+            return !card.getType().isBlockedByKing();
+        }).orElse(true);
     }
 
 }

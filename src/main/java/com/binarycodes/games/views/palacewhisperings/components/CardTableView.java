@@ -2,6 +2,7 @@ package com.binarycodes.games.views.palacewhisperings.components;
 
 import java.util.Optional;
 
+import com.binarycodes.games.views.palacewhisperings.components.cardaction.Hofmarschall;
 import com.binarycodes.games.views.palacewhisperings.components.cardaction.Mundschenk;
 import com.binarycodes.games.views.palacewhisperings.components.cardaction.Wachter;
 import com.binarycodes.games.views.palacewhisperings.components.cardaction.Zofe;
@@ -39,18 +40,12 @@ public class CardTableView extends VerticalLayout {
         }
 
         final var dialog = switch (card.getType()) {
-            case HOFMARSCHALL -> null;
-            case MUNDSCHENK -> {
-                yield new Mundschenk(player, this.gameController);
-            }
+            case HOFMARSCHALL -> new Hofmarschall(this.gameController, player);
+            case MUNDSCHENK -> new Mundschenk(this.gameController, player);
             case SCHATZMEISTER -> null;
-            case WÄCHTER -> {
-                yield new Wachter(player);
-            }
+            case WÄCHTER -> new Wachter(this.gameController, player);
             case ZAUBERER -> null;
-            case ZOFE -> {
-                yield new Zofe(player, this.gameController);
-            }
+            case ZOFE -> new Zofe(this.gameController, player);
             default -> null;
         };
         return Optional.of(dialog);

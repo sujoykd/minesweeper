@@ -7,7 +7,7 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 
 import com.vaadin.flow.component.Component;
 
-public final class GenericUtil {
+public final class GameUtil {
 
     public static HashMap<Class<? extends Component>, Game> findAllGames() {
         final ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);

@@ -1,10 +1,10 @@
 package com.binarycodes.games.views.palacewhisperings;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
 
 import com.binarycodes.games.util.Game;
 import com.binarycodes.games.util.GameIcon;
@@ -15,10 +15,12 @@ import com.binarycodes.games.views.palacewhisperings.components.PlayerView;
 import com.binarycodes.games.views.palacewhisperings.service.Card;
 import com.binarycodes.games.views.palacewhisperings.service.CardColor;
 import com.binarycodes.games.views.palacewhisperings.service.GameController;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.shared.Registration;
 
 @Game(title = "Palace Whisperings", icon = GameIcon.CARD_GAMES)
 @Route(value = "palastgefluster", layout = MainLayout.class)
@@ -29,7 +31,10 @@ public class PalaceWhisperingsView extends VerticalLayout {
     private CardTableView tableView;
     private MessageBar messageBar;
 
+    private final List<Registration> registrations;
+
     public PalaceWhisperingsView() {
+        this.registrations = new ArrayList<>();
         this.getStyle().setPadding("20px");
         this.setupNewGame();
     }
@@ -49,10 +54,11 @@ public class PalaceWhisperingsView extends VerticalLayout {
         this.playersViewMap = this.gameController.createAllPlayers()
                                                  .stream()
                                                  .map(player -> {
-                                                     final var playerView = new PlayerView(player);
-                                                     playerView.addCardPlayedListener(event -> {
+                                                     final var playerView = new PlayerView(player, this.gameController);
+                                                     final var registration = playerView.addCardPlayedListener(event -> {
                                                          this.handleCardPlay(event.getSource(), event.getCard());
                                                      });
+                                                     this.registrations.add(registration);
                                                      gameSection.add(playerView);
                                                      return playerView;
                                                  })
@@ -80,7 +86,7 @@ public class PalaceWhisperingsView extends VerticalLayout {
 
         final var player = currentPlayerView.getPlayer();
 
-        final var messageText = "%s played %s %s".formatted(player.getName(), card.getColor().name().toLowerCase(), StringUtils.capitalize(card.getType().name().toLowerCase()));
+        final var messageText = "%s played %s %s".formatted(player.getName(), card.getColor().name().toLowerCase(), card.getType().displayName());
         this.messageBar.update(messageText);
 
         final var actionDialog = this.tableView.nextAction(player, card);
@@ -104,4 +110,9 @@ public class PalaceWhisperingsView extends VerticalLayout {
         this.playersViewMap.get(nextPlayerColor).setVisible(true);
     }
 
+    @Override
+    protected void onDetach(final DetachEvent detachEvent) {
+        super.onDetach(detachEvent);
+        this.registrations.stream().forEach(Registration::remove);
+    }
 }

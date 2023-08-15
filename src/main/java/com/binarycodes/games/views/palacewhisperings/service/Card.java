@@ -9,11 +9,13 @@ public class Card {
     private final UUID id;
     private final CardColor color;
     private final CardType type;
+    private final boolean king;
 
-    public Card(final CardColor color, final CardType type) {
+    public Card(final CardColor color, final CardType type, final boolean king) {
         this.id = UUID.randomUUID();
         this.color = color;
         this.type = type;
+        this.king = king;
     }
 
     public CardColor getColor() {
@@ -25,12 +27,21 @@ public class Card {
     }
 
     public String imagePath() {
-        return IMAGE_NAME_FORMAT.formatted(this.toString());
+        if (this.king) {
+            final var name = "king_" + this.type.name().toLowerCase();
+            return IMAGE_NAME_FORMAT.formatted(name);
+        }
+        final var name = this.type.name().toLowerCase() + "_" + this.color.name().toLowerCase();
+        return IMAGE_NAME_FORMAT.formatted(name);
+    }
+
+    public boolean isKing() {
+        return this.king;
     }
 
     @Override
     public String toString() {
-        return this.type.name().toLowerCase() + "_" + this.color.name().toLowerCase();
+        return (this.king ? "king_" : "") + this.type.name().toLowerCase() + "_" + this.color.name().toLowerCase();
     }
 
     @Override

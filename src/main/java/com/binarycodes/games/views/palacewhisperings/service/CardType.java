@@ -3,16 +3,18 @@ package com.binarycodes.games.views.palacewhisperings.service;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
+
 public enum CardType {
     HOFNARR("Court Jester") {
         @Override
-        public boolean hasNextAction(final Player player, final GameController gameController) {
+        public boolean cardHasNextAction(final Player player, final GameController gameController) {
             return false;
         }
     },
     MUNDSCHENK("Cup Bearer") {
         @Override
-        public boolean hasNextAction(final Player player, final GameController gameController) {
+        public boolean cardHasNextAction(final Player player, final GameController gameController) {
             // exchange a card in display with others display without forcing a palace whisper
 
             final var playerCardsToExchange = player.getDisplayedCards()
@@ -40,7 +42,7 @@ public enum CardType {
     },
     WÄCHTER("Custodian") {
         @Override
-        public boolean hasNextAction(final Player player, final GameController gameController) {
+        public boolean cardHasNextAction(final Player player, final GameController gameController) {
             // take back a card from display
 
             return player.getDisplayedCards().stream().anyMatch(card -> card.getType() != this);
@@ -48,7 +50,7 @@ public enum CardType {
     },
     ZOFE("Lady's Maid") {
         @Override
-        public boolean hasNextAction(final Player player, final GameController gameController) {
+        public boolean cardHasNextAction(final Player player, final GameController gameController) {
             // discard a card from hand and draw a new one
 
             return !player.getCards().isEmpty();
@@ -56,25 +58,19 @@ public enum CardType {
     },
     ZAUBERER("Magician") {
         @Override
-        public boolean hasNextAction(final Player player, final GameController gameController) {
+        public boolean cardHasNextAction(final Player player, final GameController gameController) {
             return false;
         }
     },
     HOFMARSCHALL("Marshall") {
         @Override
-        public boolean hasNextAction(final Player player, final GameController gameController) {
+        public boolean cardHasNextAction(final Player player, final GameController gameController) {
             return true;
         }
     },
     SCHATZMEISTER("Treasurer") {
         @Override
-        public boolean hasNextAction(final Player player, final GameController gameController) {
-            return false;
-        }
-    },
-    KÖNIG("King") {
-        @Override
-        public boolean hasNextAction(final Player player, final GameController gameController) {
+        public boolean cardHasNextAction(final Player player, final GameController gameController) {
             return false;
         }
     };
@@ -89,14 +85,26 @@ public enum CardType {
         return this.role;
     }
 
-    public boolean isPlayerType() {
-        return this != KÖNIG;
-    }
-
     public boolean isKingType() {
         return this != HOFMARSCHALL;
     }
 
-    public abstract boolean hasNextAction(final Player player, final GameController gameController);
+    public boolean isBlockedByKing() {
+        return this == HOFNARR;
+    }
+
+    public String displayName() {
+        return StringUtils.capitalize(this.name().toLowerCase());
+    }
+
+    protected abstract boolean cardHasNextAction(final Player player, final GameController gameController);
+
+    public boolean hasNextAction(final Player player, final GameController gameController) {
+        final var isSetAsKing = gameController.getKingCardInEffect().map(king -> king.getType() == this).orElse(false);
+        if (isSetAsKing && this.isBlockedByKing()) {
+            return false;
+        }
+        return this.cardHasNextAction(player, gameController);
+    }
 
 }

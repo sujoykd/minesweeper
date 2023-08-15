@@ -2,6 +2,7 @@ package com.binarycodes.games.views.palacewhisperings.components;
 
 import com.binarycodes.games.views.palacewhisperings.CardPlayEvent;
 import com.binarycodes.games.views.palacewhisperings.service.Card;
+import com.binarycodes.games.views.palacewhisperings.service.GameController;
 import com.binarycodes.games.views.palacewhisperings.service.Player;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -11,9 +12,11 @@ public class PlayerView extends VerticalLayout {
 
     private final Player player;
     private final PlayerDeck deck;
+    private final GameController gameController;
 
-    public PlayerView(final Player player) {
+    public PlayerView(final Player player, final GameController gameController) {
         this.player = player;
+        this.gameController = gameController;
 
         this.setSpacing(false);
         this.setPadding(false);
@@ -26,7 +29,7 @@ public class PlayerView extends VerticalLayout {
     }
 
     private void cardPlayAction(final Card card) {
-        final boolean validPlay = this.player.playCard(card);
+        final boolean validPlay = this.player.playCard(this.gameController, card);
         this.deck.showHand(this::cardPlayAction);
         if (validPlay) {
             this.fireEvent(new CardPlayEvent(this, card));

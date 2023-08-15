@@ -6,10 +6,8 @@ import java.util.Objects;
 
 public class Player {
     private final String name;
-
     private final CardColor color;
     private final List<Card> cards;
-
     private final List<Card> displayedCards;
 
     public Player(final String name, final CardColor color, final List<Card> cards) {
@@ -20,13 +18,19 @@ public class Player {
         this.displayedCards = new ArrayList<>();
     }
 
-    public boolean playCard(final Card card) {
-        if (!this.isCardTypeDisplayed(card)) {
+    public boolean playCard(final GameController gameController, final Card card) {
+        if (this.canPlay(gameController, card)) {
             this.cards.remove(card);
             this.displayedCards.add(card);
             return true;
         }
         return false;
+    }
+
+    private boolean canPlay(final GameController gameController, final Card card) {
+        final var alreadyPlayed = this.isCardTypeDisplayed(card);
+        final var canPlayCard = gameController.canPlay(card);
+        return canPlayCard && !alreadyPlayed;
     }
 
     private boolean isCardTypeDisplayed(final Card playCard) {

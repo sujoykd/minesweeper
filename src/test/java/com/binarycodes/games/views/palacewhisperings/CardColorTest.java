@@ -13,13 +13,11 @@ class CardColorTest {
 
         for (final var color : CardColor.values()) {
             for (final var type : CardType.values()) {
-                if (type.isPlayerType()) {
-                    final var imageName = type.name().toLowerCase();
-                    final var colorName = color.name().toLowerCase();
-                    final var finalName = imageName + "_" + colorName;
-                    final var output = String.format(text, imageName, color.getTintShade(), finalName);
-                    System.out.println(output);
-                }
+                final var imageName = type.name().toLowerCase();
+                final var colorName = color.name().toLowerCase();
+                final var finalName = imageName + "_" + colorName;
+                final var output = String.format(text, imageName, color.getTintShade(), finalName);
+                System.out.println(output);
             }
         }
     }
