@@ -20,7 +20,7 @@ public class Mundschenk extends Dialog {
     public Mundschenk(final Player player, final GameController gameController) {
         this.gameController = gameController;
 
-        final var selfPickList = player.getDisplayedCards().stream().filter(card -> card.getType() != CardType.WÄCHTER).toList();
+        final var selfPickList = player.getDisplayedCards().stream().filter(card -> card.getType() != CardType.MUNDSCHENK).toList();
         final var otherPickList = gameController.getAllPlayers().stream().map(Player::getDisplayedCards).toList();
 
         final var selfField = new CardSelectionField(LABEL_SELF, selfPickList);

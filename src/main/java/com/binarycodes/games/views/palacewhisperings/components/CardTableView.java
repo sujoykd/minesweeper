@@ -33,26 +33,27 @@ public class CardTableView extends VerticalLayout {
     }
 
     public Optional<Dialog> nextAction(final Player player, final Card card) {
-        if (card.getType().hasNextAction(player, this.gameController)) {
-            final var dialog = switch (card.getType()) {
-                case HOFMARSCHALL -> null;
-                case MUNDSCHENK -> {
-
-                    yield new Mundschenk(player, this.gameController);
-                }
-                case SCHATZMEISTER -> null;
-                case WÄCHTER -> {
-                    yield new Wachter(player);
-                }
-                case ZAUBERER -> null;
-                case ZOFE -> {
-                    yield new Zofe(player, this.gameController);
-                }
-                default -> null;
-            };
-            return Optional.of(dialog);
+        final var hasAction = card.getType().hasNextAction(player, this.gameController);
+        if (!hasAction) {
+            return Optional.empty();
         }
-        return Optional.empty();
+
+        final var dialog = switch (card.getType()) {
+            case HOFMARSCHALL -> null;
+            case MUNDSCHENK -> {
+                yield new Mundschenk(player, this.gameController);
+            }
+            case SCHATZMEISTER -> null;
+            case WÄCHTER -> {
+                yield new Wachter(player);
+            }
+            case ZAUBERER -> null;
+            case ZOFE -> {
+                yield new Zofe(player, this.gameController);
+            }
+            default -> null;
+        };
+        return Optional.of(dialog);
     }
 
 }

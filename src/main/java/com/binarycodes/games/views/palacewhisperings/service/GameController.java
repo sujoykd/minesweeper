@@ -93,8 +93,14 @@ public class GameController {
         final var other = this.cardPlayerMap.get(selfCard);
 
         // cannot force a palace whisper by swapping display cards
-        final var playerError = player.getDisplayedCards().stream().anyMatch(card -> card.getType() == othersCard.getType());
-        final var otherError = other.getDisplayedCards().stream().anyMatch(card -> card.getType() == selfCard.getType());
+        final var playerError = player.getDisplayedCards()
+                                      .stream()
+                                      .filter(card -> card.getType() != selfCard.getType())
+                                      .anyMatch(card -> card.getType() == othersCard.getType());
+        final var otherError = other.getDisplayedCards()
+                                    .stream()
+                                    .filter(card -> card.getType() != othersCard.getType())
+                                    .anyMatch(card -> card.getType() == selfCard.getType());
 
         if (playerError || otherError) {
             throw new UnsupportedOperationException("Forcing a palace whisper is not allowed");
