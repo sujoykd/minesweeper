@@ -21,8 +21,17 @@ public class Mundschenk extends ActionDialog {
 
     @Override
     public Component content() {
-        final var selfPickList = this.getPlayer().getDisplayedCards().stream().filter(card -> card.getType() != CardType.MUNDSCHENK).toList();
-        final var otherPickList = this.getGameController().getAllPlayers().stream().map(Player::getDisplayedCards).toList();
+        final var selfPickList = this.getPlayer()
+                                     .getDisplayedCards()
+                                     .stream()
+                                     .filter(card -> card.getType() != CardType.MUNDSCHENK)
+                                     .toList();
+        final var otherPickList = this.getGameController()
+                                      .getAllPlayers()
+                                      .stream()
+                                      .filter(p -> !p.equals(this.getPlayer()))
+                                      .map(Player::getDisplayedCards)
+                                      .toList();
 
         final var selfField = new CardSelectionField(LABEL_SELF, selfPickList);
         final var othersField = new CardSelectionGroupField(LABEL_OTHERS, otherPickList);

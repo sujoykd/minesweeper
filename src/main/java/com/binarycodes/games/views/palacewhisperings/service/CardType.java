@@ -101,7 +101,7 @@ public enum CardType {
 
     public boolean hasNextAction(final Player player, final GameController gameController) {
         final var isSetAsKing = gameController.getKingCardInEffect().map(king -> king.getType() == this).orElse(false);
-        if (isSetAsKing && this.isBlockedByKing()) {
+        if (isSetAsKing) {
             return false;
         }
         return this.cardHasNextAction(player, gameController);

@@ -94,7 +94,7 @@ public class GameController {
         }
 
         final var player = this.cardPlayerMap.get(selfCard);
-        final var other = this.cardPlayerMap.get(selfCard);
+        final var other = this.cardPlayerMap.get(othersCard);
 
         // cannot force a palace whisper by swapping display cards
         final var playerError = player.getDisplayedCards()
