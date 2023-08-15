@@ -1,0 +1,47 @@
+plugins {
+	id 'java'
+    id 'java-library'
+    id 'org.springframework.boot' version '3.0.2'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'com.vaadin' version '24.1.4'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api 'com.vaadin:vaadin-core'
+    api 'com.vaadin:vaadin-spring-boot-starter'
+    api 'org.parttio:line-awesome:1.1.0'
+    api 'org.springframework.boot:spring-boot-starter-validation'
+    api 'org.springframework.boot:spring-boot-devtools'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'com.vaadin:vaadin-testbench-junit5'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "com.vaadin:vaadin-bom:24.1.4"
+	}
+}
+
+group = 'com.binarycodes.games'
+version = '1.0-SNAPSHOT'
+description = 'minesweeper'
+
+compileJava {
+    options.release = 17
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Javadoc) {
+    options.encoding = 'UTF-8'
+}
+
+defaultTasks("clean", "vaadinBuildFrontend", "build")
+
